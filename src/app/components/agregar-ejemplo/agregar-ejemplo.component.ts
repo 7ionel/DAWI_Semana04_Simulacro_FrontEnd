@@ -41,6 +41,7 @@ export class AgregarEjemploComponent {
   registra(){
         this.ejemplo.usuarioActualiza = this.objUsuario;
         this.ejemplo.usuarioRegistro = this.objUsuario;
+
         this.ejemploService.registrar(this.ejemplo).subscribe(
           x=>{
             Swal.fire({
@@ -51,5 +52,4 @@ export class AgregarEjemploComponent {
           },
         );
   }
-
 }

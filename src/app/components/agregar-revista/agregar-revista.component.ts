@@ -3,6 +3,14 @@ import { AppMaterialModule } from '../../app.material.module';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenuComponent } from '../../menu/menu.component';
+import { Pais } from '../../models/pais.model';
+import { DataCatalogo } from '../../models/dataCatalogo.model';
+import { UtilService } from '../../services/util.service';
+import { Revista } from '../../models/Revista.model';
+import { RevistaService } from '../../services/revista.service';
+import Swal from 'sweetalert2';
+import { Usuario } from '../../models/usuario.model';
+import { TokenService } from '../../security/token.service';
 
 @Component({
   standalone: true,
@@ -12,5 +20,46 @@ import { MenuComponent } from '../../menu/menu.component';
   styleUrls: ['./agregar-revista.component.css']
 })
 export class AgregarRevistaComponent {
+ltsPais :Pais[]=[];
+ltsTipoRevista: DataCatalogo[] = [];
 
+objRevista: Revista={
+  nombre:"",
+  frecuencia:"",
+  fechaCreacion : new Date(),
+  telefono:"",
+  pais:{
+    idPais:-1
+  },
+  tipoRevista:{
+    idDataCatalogo : -1
+  }
+}
+objUsuario : Usuario={};
+constructor(private utilService: UtilService, 
+  private revistaService:RevistaService,
+   private tokenService: TokenService){
+
+  this.utilService.listaPais().subscribe(
+    x=> this.ltsPais=x
+  );
+  this.utilService.listaTipoLibroRevista().subscribe(
+    x=> this.ltsTipoRevista = x
+  );
+  this.objUsuario.idUsuario = this.tokenService.getUserId();
+}
+
+registra(){
+    this.objRevista.usuarioActualiza=this.objUsuario;
+    this.objRevista.usuarioRegistro = this.objUsuario;
+
+    this.revistaService.registrar(this.objRevista).subscribe(
+        x =>
+          Swal.fire({
+            icon: 'info',
+            title: 'Resultado del Registro',
+            text: x.mensaje,
+          })
+    );
+}
 }
